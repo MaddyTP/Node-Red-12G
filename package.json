@@ -1,0 +1,12 @@
+{
+    "name": "Node-Red-12G",
+    "description": "Node-Red configuration for 12G reef.",
+    "version": "0.0.1",
+    "dependencies": {},
+    "node-red": {
+        "settings": {
+            "flowFile": "flow.json",
+            "credentialsFile": "flow_cred.json"
+        }
+    }
+}
