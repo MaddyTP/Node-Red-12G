@@ -929,6 +929,7 @@
         "customAddr": true,
         "ezoBoard": "rtd",
         "ezoTopic": "temp1",
+        "bus": 1,
         "x": 290,
         "y": 100,
         "wires": [
@@ -947,6 +948,7 @@
         "customAddr": false,
         "ezoBoard": "rtd",
         "ezoTopic": "temp2",
+        "bus": 1,
         "x": 290,
         "y": 140,
         "wires": [
@@ -965,6 +967,7 @@
         "customAddr": false,
         "ezoBoard": "ec",
         "ezoTopic": "ec",
+        "bus": 1,
         "x": 290,
         "y": 260,
         "wires": [
@@ -983,6 +986,7 @@
         "customAddr": false,
         "ezoBoard": "ph",
         "ezoTopic": "ph",
+        "bus": 1,
         "x": 290,
         "y": 180,
         "wires": [
@@ -1001,6 +1005,7 @@
         "customAddr": false,
         "ezoBoard": "orp",
         "ezoTopic": "orp",
+        "bus": 1,
         "x": 290,
         "y": 220,
         "wires": [
@@ -1253,7 +1258,6 @@
         "id": "e8f1d580.fef278",
         "type": "widgetlords-vpe-2901a-relay",
         "z": "fa790d73.1efda",
-        "d": true,
         "name": "Relay 1",
         "channel": "0",
         "x": 1000,
@@ -1633,7 +1637,7 @@
         "channel": "0",
         "address": "0",
         "x": 870,
-        "y": 540,
+        "y": 580,
         "wires": []
     },
     {
@@ -1643,7 +1647,7 @@
         "name": "PI-SPI-DIN-4AO",
         "info": "",
         "x": 700,
-        "y": 500,
+        "y": 540,
         "wires": []
     },
     {
@@ -1654,7 +1658,7 @@
         "channel": "1",
         "address": "0",
         "x": 870,
-        "y": 580,
+        "y": 620,
         "wires": []
     },
     {
@@ -1665,7 +1669,7 @@
         "channel": "2",
         "address": "0",
         "x": 870,
-        "y": 620,
+        "y": 660,
         "wires": []
     },
     {
@@ -1676,7 +1680,7 @@
         "channel": "3",
         "address": "0",
         "x": 870,
-        "y": 660,
+        "y": 700,
         "wires": []
     },
     {
@@ -1685,8 +1689,8 @@
         "z": "fa790d73.1efda",
         "name": "KP303",
         "info": "",
-        "x": 970,
-        "y": 360,
+        "x": 770,
+        "y": 320,
         "wires": []
     },
     {
@@ -1776,7 +1780,7 @@
         "name": "KP303",
         "device": "192.168.50.54",
         "interval": 60000,
-        "eventInterval": 15000,
+        "eventInterval": "10000",
         "payload": "getInfo",
         "payloadType": "info",
         "debug": false,
@@ -2267,7 +2271,7 @@
         "z": "fa790d73.1efda",
         "name": "Alarm",
         "group": "2316f587.0b98ca",
-        "order": 8,
+        "order": 9,
         "width": 6,
         "height": 1,
         "label": "Alarm (SMS)",
@@ -2287,7 +2291,7 @@
             }
         ],
         "topic": "alarm",
-        "func": "var tanklvl = flow.get('disp_lvl');\nvar tmp1 = flow.get('temp1').toFixed(1);\nvar tmp2 = flow.get('temp2').toFixed(1);\nvar ph = flow.get('ph').toFixed(1);\nvar ec = flow.get('ec');\nvar active = flow.get('alarm');\nvar alarms = ['Alarm!'];\n\n//display level alarm\nif(tanklvl < 62) { \n    alarms.push('TANK: display level at ' + tanklvl + '%!');\n}\n\n//temp alarm\nif(tmp1 > 80 || tmp1 < 75 || tmp2 > 80 || tmp2 < 75) { \n    alarms.push('TEMP: temp at ' + tmp1 + ' and ' + tmp2 + '!');\n}\n\n//ph alarm\nif(ph > 8.5 || ph < 7.9) { \n    alarms.push('PH: ph at ' + ph + '!');\n}\n\n//conductivity alarm\nif(ec < 1.023 || ec > 1.027) { \n    alarms.push('EC: ec at ' + ec + '!');\n}\n\nvar msg = {};\n\nif(alarms.length > 1){\n    flow.set('alarm', true);\n    msg.toFront = 'ON';\n    msg.payload = alarms.join('\\n');\n    return msg;\n} else {\n    if(active){\n        flow.set('alarm', false);\n        msg.toFront = 'OFF';\n        msg.payload = 'Alarms cleared.';\n        return msg;\n    }\n    return;\n}",
+        "func": "var tanklvl = flow.get('disp_lvl');\nvar tmp1 = flow.get('temp1').toFixed(1);\nvar tmp2 = flow.get('temp2').toFixed(1);\nvar ph = flow.get('ph').toFixed(1);\nvar ec = flow.get('ec');\nvar active = flow.get('alarm');\nvar alarms = ['Alarm!'];\n\n//display level alarm\nif(tanklvl < 62) { \n    alarms.push('TANK: display level at ' + tanklvl + '%!');\n}\n\n//temp alarm\nif((tmp1 > 80.0 && tmp2 < 80.0) || (tmp1 < 75.0 && tmp2 < 75.0)) { \n    alarms.push('TEMP: temp at ' + tmp1 + ' and ' + tmp2 + '!');\n}\n\n//ph alarm\nif(ph > 8.5 || ph < 7.8) { \n    alarms.push('PH: ph at ' + ph + '!');\n}\n\n//conductivity alarm\nif(ec < 1.023 || ec > 1.027) { \n    alarms.push('EC: ec at ' + ec + '!');\n}\n\nvar msg = {};\n\nif(alarms.length > 1){\n    flow.set('alarm', true);\n    msg.toFront = 'ON';\n    msg.payload = alarms.join('\\n');\n    return msg;\n} else {\n    if(active){\n        flow.set('alarm', false);\n        msg.toFront = 'OFF';\n        msg.payload = 'Alarms cleared.';\n        return msg;\n    }\n    return;\n}",
         "outputs": 1,
         "noerr": 0,
         "libs": [],
@@ -2340,7 +2344,7 @@
         "repeat": "5",
         "repeatUnit": "1000",
         "x": 670,
-        "y": 580,
+        "y": 620,
         "wires": [
             [
                 "f3acc91f.097608"
@@ -2391,7 +2395,7 @@
         "repeat": "200",
         "repeatUnit": "1",
         "x": 670,
-        "y": 620,
+        "y": 660,
         "wires": [
             [
                 "2560d.32b2f9f3c",
@@ -2438,7 +2442,7 @@
         "repeat": "1",
         "repeatUnit": "1000",
         "x": 670,
-        "y": 660,
+        "y": 700,
         "wires": [
             [
                 "a7acd6a8.5cb3f8"
@@ -2755,9 +2759,80 @@
         "minout": "0",
         "maxout": "100",
         "x": 1050,
-        "y": 620,
+        "y": 660,
         "wires": [
             []
+        ]
+    },
+    {
+        "id": "60134309af9ac18b",
+        "type": "ui_output",
+        "z": "fa790d73.1efda",
+        "name": "ATO",
+        "group": "2316f587.0b98ca",
+        "order": 8,
+        "width": 6,
+        "height": 1,
+        "label": "ATO",
+        "useThemeColors": true,
+        "options": [
+            {
+                "label": "OFF",
+                "value": "false",
+                "valueType": "bool",
+                "color": "#009933"
+            },
+            {
+                "label": "AUTO",
+                "value": "func",
+                "valueType": "func",
+                "color": "#999999"
+            },
+            {
+                "label": "ON",
+                "value": "true",
+                "valueType": "bool",
+                "color": "#ff6666"
+            }
+        ],
+        "topic": "ato",
+        "func": "var smp = flow.get('sump_lvl');\n\nif (smp < 1950) {\n    pload = false;\n} else {\n    pload = true;\n}\n\nvar msg = {\n    topic: 'ato', \n    payload: pload,\n    toFront: pload === true ? 'ON' : 'OFF',\n};\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "libs": [],
+        "repeat": "5",
+        "repeatUnit": "1000",
+        "x": 830,
+        "y": 940,
+        "wires": [
+            [
+                "e8f1d580.fef278"
+            ]
+        ]
+    },
+    {
+        "id": "8e8cce1c4e4893f1",
+        "type": "inject",
+        "z": "fa790d73.1efda",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "5",
+        "topic": "",
+        "payload": "startInfoEvents",
+        "payloadType": "str",
+        "x": 800,
+        "y": 480,
+        "wires": [
+            [
+                "11f8ef10c50e29d9"
+            ]
         ]
     },
     {
@@ -3646,6 +3721,7 @@
         "customAddr": true,
         "ezoBoard": "hum",
         "ezoTopic": "humidity",
+        "bus": 1,
         "x": 520,
         "y": 420,
         "wires": [
@@ -3948,6 +4024,7 @@
         "customAddr": false,
         "ezoBoard": "ph",
         "ezoTopic": "peristaltic",
+        "bus": 1,
         "x": 550,
         "y": 840,
         "wires": [
