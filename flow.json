@@ -1019,7 +1019,6 @@
         "id": "48a5dc78.07fc74",
         "type": "widgetlords-relay",
         "z": "fa790d73.1efda",
-        "d": true,
         "name": "Relay 1",
         "channel": "0",
         "address": "0",
@@ -1258,6 +1257,7 @@
         "id": "e8f1d580.fef278",
         "type": "widgetlords-vpe-2901a-relay",
         "z": "fa790d73.1efda",
+        "d": true,
         "name": "Relay 1",
         "channel": "0",
         "x": 1000,
@@ -2291,7 +2291,7 @@
             }
         ],
         "topic": "alarm",
-        "func": "var tanklvl = flow.get('disp_lvl');\nvar tmp1 = flow.get('temp1').toFixed(1);\nvar tmp2 = flow.get('temp2').toFixed(1);\nvar ph = flow.get('ph').toFixed(1);\nvar ec = flow.get('ec');\nvar active = flow.get('alarm');\nvar alarms = ['Alarm!'];\n\n//display level alarm\nif(tanklvl < 62) { \n    alarms.push('TANK: display level at ' + tanklvl + '%!');\n}\n\n//temp alarm\nif((tmp1 > 80.0 && tmp2 < 80.0) || (tmp1 < 75.0 && tmp2 < 75.0)) { \n    alarms.push('TEMP: temp at ' + tmp1 + ' and ' + tmp2 + '!');\n}\n\n//ph alarm\nif(ph > 8.5 || ph < 7.8) { \n    alarms.push('PH: ph at ' + ph + '!');\n}\n\n//conductivity alarm\nif(ec < 1.023 || ec > 1.027) { \n    alarms.push('EC: ec at ' + ec + '!');\n}\n\nvar msg = {};\n\nif(alarms.length > 1){\n    flow.set('alarm', true);\n    msg.toFront = 'ON';\n    msg.payload = alarms.join('\\n');\n    return msg;\n} else {\n    if(active){\n        flow.set('alarm', false);\n        msg.toFront = 'OFF';\n        msg.payload = 'Alarms cleared.';\n        return msg;\n    }\n    return;\n}",
+        "func": "var tanklvl = flow.get('disp_lvl');\nvar tmp1 = flow.get('temp1').toFixed(1);\nvar tmp2 = flow.get('temp2').toFixed(1);\nvar ph = flow.get('ph').toFixed(1);\nvar ec = flow.get('ec');\nvar active = flow.get('alarm');\nvar alarms = ['Alarm!'];\n\n//display level alarm\nif(tanklvl < 62) { \n    alarms.push('TANK: display level at ' + tanklvl + '%!');\n}\n\n//temp alarm\nif((tmp1 > 82.0 && tmp2 > 82.0) || (tmp1 < 75.0 && tmp2 < 75.0)) { \n    alarms.push('TEMP: temp at ' + tmp1 + ' and ' + tmp2 + '!');\n}\n\n//ph alarm\nif(ph > 8.5 || ph < 7.8) { \n    alarms.push('PH: ph at ' + ph + '!');\n}\n\n//conductivity alarm\nif(ec < 1.023 || ec > 1.027) { \n    alarms.push('EC: ec at ' + ec + '!');\n}\n\nvar msg = {};\n\nif(alarms.length > 1){\n    flow.set('alarm', true);\n    msg.toFront = 'ON';\n    msg.payload = alarms.join('\\n');\n    return msg;\n} else {\n    if(active){\n        flow.set('alarm', false);\n        msg.toFront = 'OFF';\n        msg.payload = 'Alarms cleared.';\n        return msg;\n    }\n    return;\n}",
         "outputs": 1,
         "noerr": 0,
         "libs": [],
@@ -2337,7 +2337,7 @@
             }
         ],
         "topic": "",
-        "func": "var d = new Date();\nvar h = d.getHours();\nvar pload = 5;\n\nif (h >= 8 && h < 19){\n    pload = 1500;\n}\n\nvar fnt = Math.round(((pload / 4000) * 100)) + '%';\n\nvar msg = { topic: 'light_val', payload: pload, toFront: fnt };\nreturn msg;",
+        "func": "var d = new Date();\nvar h = d.getHours();\nvar pload = 5;\n\nif (h >= 8 && h < 20){\n    pload = 2000;\n}\n\nvar fnt = Math.round(((pload / 4000) * 100)) + '%';\n\nvar msg = { topic: 'light_val', payload: pload, toFront: fnt };\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "libs": [],
@@ -2435,7 +2435,7 @@
             }
         ],
         "topic": "drain_val",
-        "func": "//var ctr = new pid(12.0, 0.0, 0.0, 0.1);\n//var inp = context.get('disp_lvl');\n//ctr.setTarget(1700);\n//var correction = Math.round(ctr.update(inp));\n//if (correction < 0) correction = 0;\n//if (correction > 4000) correction = 4000;\n//var msg = { payload: correction };\n//return msg;\n\n//get sensor value\nvar inp = flow.get('disp_lvl');\nvar pmp = flow.get('pmp_val');\n\n//flip sensor range\ninp = ((inp / 4000) * -4000) + 4000;\n\nvar cor = 3500;\n\nif(inp < 2300 || pmp == 0){\n    cor = 0;\n}\n\nvar fnt = Math.round(((cor / 4000) * 100)) + '%';\nvar msg = { topic: 'drain_val', payload: cor, toFront: fnt };\nreturn msg;",
+        "func": "//var ctr = new pid(12.0, 0.0, 0.0, 0.1);\n//var inp = context.get('disp_lvl');\n//ctr.setTarget(1700);\n//var correction = Math.round(ctr.update(inp));\n//if (correction < 0) correction = 0;\n//if (correction > 4000) correction = 4000;\n//var msg = { payload: correction };\n//return msg;\n\n//get sensor value\nvar inp = flow.get('disp_lvl');\nvar pmp = flow.get('pmp_val');\n\n//flip sensor range\ninp = ((inp / 4000) * -4000) + 4000;\n\nvar cor = 3300;\n\nif(inp < 2300 || pmp == 0){\n    cor = 0;\n}\n\nvar fnt = Math.round(((cor / 4000) * 100)) + '%';\nvar msg = { topic: 'drain_val', payload: cor, toFront: fnt };\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "libs": [],
@@ -2481,7 +2481,7 @@
             }
         ],
         "topic": "192.168.50.54/0",
-        "func": "var tmp1 = flow.get('temp1');\nvar tmp2 = flow.get('temp2');\nvar state = flow.get('plug1');\nvar pload;\n\nif(tmp1 > 81.0 || tmp2 > 81.0) {\n    pload = false;\n} else {\n    pload = true;\n}\n\nif (pload !== state) {\n    var msg = { \n        topic: '192.168.50.54/0', \n        payload: pload,\n        toFront: pload === true ? 'ON' : 'OFF',\n    };\n    return msg;\n} else {\n    return;\n}",
+        "func": "var tmp1 = flow.get('temp1');\nvar tmp2 = flow.get('temp2');\nvar state = flow.get('plug1');\nvar pload;\n\nif(tmp1 > 81.0 && tmp2 > 81.0) {\n    pload = false;\n} else {\n    pload = true;\n}\n\nif (pload !== state) {\n    var msg = { \n        topic: '192.168.50.54/0', \n        payload: pload,\n        toFront: pload === true ? 'ON' : 'OFF',\n    };\n    return msg;\n} else {\n    return;\n}",
         "outputs": 1,
         "noerr": 0,
         "libs": [],
@@ -2527,7 +2527,7 @@
             }
         ],
         "topic": "192.168.50.54/1",
-        "func": "var smp = flow.get('sump_lvl');\nvar state = flow.get('plug2');\nvar pload;\nvar d = new Date();\nvar h = d.getHours();\n\nif (h >= 10 && h < 18){\n    if (smp < 1800) {\n        pload = false;\n    } else {\n        pload = true;\n    }\n} else {\n    pload = false;\n}\n\nif (pload !== state){\n    var msg = { \n        topic: '192.168.50.54/1', \n        payload: pload,\n        toFront: pload === true ? 'ON' : 'OFF',\n    };\n    return msg;\n} else {\n    return;\n}",
+        "func": "var smp = flow.get('sump_lvl');\nvar state = flow.get('plug2');\nvar pload;\nvar d = new Date();\nvar h = d.getHours();\n\nif (smp < 1700) {\n    pload = false;\n} else {\n    pload = true;\n}\n\nif (pload !== state){\n    var msg = { \n        topic: '192.168.50.54/1', \n        payload: pload,\n        toFront: pload === true ? 'ON' : 'OFF',\n    };\n    return msg;\n} else {\n    return;\n}",
         "outputs": 1,
         "noerr": 0,
         "libs": [],
@@ -2796,17 +2796,17 @@
             }
         ],
         "topic": "ato",
-        "func": "var smp = flow.get('sump_lvl');\n\nif (smp < 1950) {\n    pload = false;\n} else {\n    pload = true;\n}\n\nvar msg = {\n    topic: 'ato', \n    payload: pload,\n    toFront: pload === true ? 'ON' : 'OFF',\n};\nreturn msg;",
+        "func": "var smp = flow.get('sump_lvl');\nvar ec = flow.get('ec');\n\n\nif (smp > 1900 && ec > 1.022) {\n    pload = true;\n} else {\n    pload = false;\n}\n\nvar msg = {\n    topic: 'ato', \n    payload: pload,\n    toFront: pload === true ? 'ON' : 'OFF',\n};\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "libs": [],
-        "repeat": "5",
+        "repeat": "3",
         "repeatUnit": "1000",
-        "x": 830,
-        "y": 940,
+        "x": 90,
+        "y": 1340,
         "wires": [
             [
-                "e8f1d580.fef278"
+                "48a5dc78.07fc74"
             ]
         ]
     },
